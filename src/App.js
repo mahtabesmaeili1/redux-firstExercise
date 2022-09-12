@@ -1,23 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import { useDispatch, useSelector } from "react-redux";
+import { deposit, withdraw, reset } from "./store/balance/slice";
+import { useState } from "react";
+import { selectBalance } from "./store/balance/selectors";
+import "./App.css";
 
 function App() {
+  const [customAmount, setCustomAmount] = useState(0);
+  const dispatch = useDispatch();
+
+  const balance = useSelector(selectBalance);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>Balance: {balance}$</p>
+      <button
+        onClick={() => {
+          dispatch(deposit(10));
+        }}
+      >
+        Deposit 10$
+      </button>
+      <button
+        onClick={() => {
+          dispatch(withdraw(10));
+        }}
+      >
+        Withdraw 10$
+      </button>
+      <button onClick={() => dispatch(reset())}>Reset</button>
+      <br />
+      <br />
+      <input
+        type="number"
+        value={customAmount}
+        onChange={(e) => {
+          setCustomAmount(parseInt(e.target.value));
+        }}
+      />
+      <br />
+      <button
+        onClick={() => {
+          dispatch(deposit(customAmount));
+          setCustomAmount(0);
+        }}
+      >
+        Deposit custom amount
+      </button>
     </div>
   );
 }
